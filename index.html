@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>פלטפורמת הזמנת דומגאות</title>
+    <title>פלטפורמת הזמנת דוגמאות</title>
     <style>
         * {
             margin: 0;
@@ -424,8 +424,8 @@
 </head>
 <body>
     <div class="header">
-        <h1>פלטפורמת הזמנת דומגאות</h1>
-        <p>מערכת מתקדמת לניהול וזימון הזמנות עם סביבה מוצרים מפורטת</p>
+        <h1>פלטפורמת הזמנת דוגמאות</h1>
+        <p>ממשק הזמנת מוצר בדיד</p>
     </div>
 
     <div class="container">
@@ -735,7 +735,7 @@
             const hourRequest = document.getElementById('hour-request').value;
 
             let headerHtml = `
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">הזמנת דומגאות</div>
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">הזמנת דוגמאות</div>
                 <div style="margin-bottom: 15px;">
                     <div><strong>שם המזמין:</strong> ${orderName}</div>
                     <div><strong>שם הלקוח:</strong> ${customerName}</div>
@@ -848,7 +848,7 @@
             const deliveryDate = document.getElementById('delivery-date').value;
             const hourRequest = document.getElementById('hour-request').value;
 
-            let shareText = `הזמנת דומגאות\n\n`;
+            let shareText = `הזמנת דוגמאות\n\n`;
             shareText += `שם המזמין: ${orderName}\n`;
             shareText += `שם הלקוח: ${customerName}\n`;
             shareText += `תאריך איסוף מתוכנן: ${deliveryDate}\n`;
@@ -914,9 +914,9 @@
         }
 
         function downloadCSV() {
-            alert('מייצא לקובץ Excel מסודר... 📊');
+            alert('מייצא קובץ זהה לתצוגה... 📊');
             
-            // יצירת CSV מסודר בדיוק כמו התצוגה
+            // קבלת הנתונים
             const orderName = document.getElementById('order-name').value;
             const customerName = document.getElementById('customer-name').value;
             const deliveryDate = document.getElementById('delivery-date').value;
@@ -924,22 +924,24 @@
             
             let csvContent = '';
             
-            // כותרת ראשית
-            csvContent += '"הזמנת דומגאות"\n';
+            // כותרת ראשית - בדיוק כמו בתצוגה
+            csvContent += ',,,,"הזמנת דוגמאות"\n';
+            csvContent += '\n';
             csvContent += '\n';
             
-            // פרטי ההזמנה
-            csvContent += '"שם המזמין:",,"' + orderName + '"\n';
-            csvContent += '"שם הלקוח:",,"' + customerName + '"\n';
-            csvContent += '"תאריך איסוף מתוכנן:",,"' + deliveryDate + '"\n';
-            csvContent += '"שעת איסוף מבוקשת:",,"' + hourRequest + '"\n';
+            // פרטי ההזמנה - בדיוק כמו בתצוגה
+            csvContent += `,,,"שם המזמין: ${orderName}"\n`;
+            csvContent += `,,,"שם הלקוח: ${customerName}"\n`;
+            csvContent += `,,,"תאריך איסוף מתוכנן: ${deliveryDate}"\n`;
+            csvContent += `,,,"שעת איסוף מבוקשת: ${hourRequest}"\n`;
+            csvContent += '\n';
             csvContent += '\n';
             
             // כותרת טבלת מוצרים
-            csvContent += '"פרטי המוצרים:"\n';
+            csvContent += ',,,,"פרטי המוצרים:"\n';
             csvContent += '\n';
             
-            // כותרות העמודות
+            // כותרות העמודות - בדיוק כמו בתצוגה
             csvContent += '"מספר","מק״ט","מצב מוצר","כמות","הערות"\n';
             
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
@@ -969,11 +971,11 @@
             const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `הזמנת_דומגאות_${new Date().toISOString().split('T')[0]}.csv`;
+            link.download = `הזמנת_דוגמאות_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
             
             setTimeout(() => {
-                alert('הקובץ הורד בהצלחה! עכשיו יופיע מסודר באקסל 🎉');
+                alert('הקובץ הורד בפורמט זהה לתצוגה! 🎉');
             }, 1000);
         }
 
@@ -981,7 +983,7 @@
             const outputContent = document.getElementById('output-content').innerHTML;
             const textContent = document.getElementById('output-content').innerText;
             
-            const subject = encodeURIComponent('הזמנת דומגאות');
+            const subject = encodeURIComponent('הזמנת דוגמאות');
             const body = encodeURIComponent(textContent);
             
             window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
