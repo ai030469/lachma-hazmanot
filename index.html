@@ -889,27 +889,55 @@
         }
 
         function exportData() {
-            alert('מייצא נתונים לקובץ... 📊');
+            // וודא שיש נתונים להצגה
+            generateOutput();
             
-            let csvContent = "שם המזמין,שם הלקוח,תאריך איסוף מתוכנן,שעת איסוף מבוקשת,מספר שורה,מקט,מצב מוצר,כמות,הערות\n";
+            // הצג תפריט אפשרויות שיתוף
+            const shareOptions = `
+                <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-top: 15px;">
+                    <h4 style="color: #2c7a7b; margin-bottom: 15px; text-align: center;">בחר אפשרות שיתוף:</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+                        <button onclick="downloadCSV()" class="btn btn-info" style="margin: 5px;">📊 הורד קובץ Excel</button>
+                        <button onclick="shareEmail()" class="btn btn-warning" style="margin: 5px;">📧 שלח במייל</button>
+                        <button onclick="shareWhatsApp()" class="btn btn-success" style="margin: 5px;">📱 שתף בווטסאפ</button>
+                        <button onclick="copyFullOutput()" class="btn btn-primary" style="margin: 5px;">📋 העתק טקסט מלא</button>
+                        <button onclick="hideShareOptions()" class="btn btn-secondary" style="margin: 5px;">❌ סגור</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('output-content').innerHTML += shareOptions;
+        }
+
+        function hideShareOptions() {
+            generateOutput(); // חזור לתצוגה הרגילה
+        }
+
+        function downloadCSV() {
+            alert('מייצא לקובץ Excel... 📊');
+            
+            // יצור CSV מהנתונים בדיוק כמו שמופיע בטבלה
+            let csvContent = "שם המזמין,שם הלקוח,תאריך איסוף מתוכנן,שעת איסוף מבוקשת,מספר,מקט,מצב מוצר,כמות,הערות\n";
             
             const orderName = document.getElementById('order-name').value;
             const customerName = document.getElementById('customer-name').value;
             const deliveryDate = document.getElementById('delivery-date').value;
             const hourRequest = document.getElementById('hour-request').value;
+            
+            const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
 
             const rows = document.querySelectorAll('.products-table tbody tr');
             rows.forEach((row, index) => {
                 const inputs = row.querySelectorAll('input');
                 const selects = row.querySelectorAll('select');
-                const rowNumber = index + 1;
                 const code = inputs[0].value.trim();
                 const status = selects[0].value.trim();
                 const quantity = inputs[1].value.trim();
                 const notes = inputs[2].value.trim();
 
                 if (code || status || quantity || notes) {
-                    csvContent += `"${orderName}","${customerName}","${deliveryDate}","${hourRequest}","${rowNumber}","${code}","${status}","${quantity}","${notes}"\n`;
+                    const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
+                    csvContent += `"${orderName}","${customerName}","${deliveryDate}","${hourRequest}","${hebrewLetter}","${code}","${status}","${quantity}","${notes}"\n`;
                 }
             });
 
@@ -918,6 +946,30 @@
             link.href = URL.createObjectURL(blob);
             link.download = `הזמנת_דומגאות_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
+            
+            setTimeout(() => {
+                alert('הקובץ הורד בהצלחה! 🎉');
+            }, 1000);
+        }
+
+        function shareEmail() {
+            const outputContent = document.getElementById('output-content').innerHTML;
+            const textContent = document.getElementById('output-content').innerText;
+            
+            const subject = encodeURIComponent('הזמנת דומגאות');
+            const body = encodeURIComponent(textContent);
+            
+            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        }
+
+        function copyFullOutput() {
+            // העתק את הטקסט המלא כפי שמופיע בתצוגה
+            const outputElement = document.getElementById('output-content');
+            const textContent = outputElement.innerText;
+            
+            navigator.clipboard.writeText(textContent).then(() => {
+                alert('הטקסט המלא הועתק ללוח! 📋');
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
