@@ -1,0 +1,1004 @@
+function exportData() {
+            // יצוא לקובץ
+            alert('מייצא נתונים לקובץ... 📊');
+            
+            // יצירת נתוני CSV
+            let csvContent = "שם המזמין,שם הלקוח,תאריך איסוף מתוכנן,שעת איסוף מבוקשת,מספר שורה,מקט,מצב מוצר,כמות,הערות\n";
+            
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const rowNumber = index + 1;
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    csvContent += `"${orderName}","${customerName}","${deliveryDate}","${hourRequest}","${rowNumber}","${code}","${status}","${quantity}","${notes}"\n`;
+                }
+            });
+
+            // הורדת הקובץ
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `הזמנת_דומגאות_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פלטפורמת הזמנת דומגאות</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            direction: rtl;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c7a7b 0%, #2d6748 100%);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .form-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .form-title {
+            color: #2c7a7b;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d3748;
+            font-size: 0.95rem;
+        }
+
+        .form-group input, .form-group select {
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            direction: rtl;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #2c7a7b;
+            box-shadow: 0 0 0 3px rgba(44, 122, 123, 0.1);
+        }
+
+        .required::after {
+            content: " *";
+            color: #e53e3e;
+        }
+
+        .products-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .products-title {
+            color: #2c7a7b;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .products-table th {
+            background: #2c7a7b;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .products-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .products-table tr:hover {
+            background-color: #f7fafc;
+        }
+
+        .products-table input, .products-table select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .products-table input:focus, .products-table select:focus {
+            outline: none;
+            border-color: #2c7a7b;
+            box-shadow: 0 0 0 2px rgba(44, 122, 123, 0.1);
+        }
+
+        .row-number {
+            background-color: #f7fafc;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* עמודות עם רוחב מותאם */
+        .col-number {
+            width: 8%;
+            text-align: center;
+        }
+
+        .col-product {
+            width: 20%;
+            text-align: center;
+        }
+
+        .col-code {
+            width: 20%;
+            text-align: center;
+        }
+
+        .col-status {
+            width: 20%;
+            text-align: center;
+        }
+
+        .col-quantity {
+            width: 20%;
+            text-align: center;
+        }
+
+        .col-notes {
+            width: 12%;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2c7a7b;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2d6748;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(44, 122, 123, 0.3);
+        }
+
+        .btn-secondary {
+            background: #4a5568;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #2d3748;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #38a169;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #2f855a;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background: #3182ce;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #2c5282;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #d69e2e;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #b7791f;
+            transform: translateY(-2px);
+        }
+
+        /* תגובה למכשירים ניידים */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .products-table {
+                font-size: 0.8rem;
+            }
+
+            .products-table th,
+            .products-table td {
+                padding: 0.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            /* הסתרת עמודות פחות חשובות במובייל */
+            .col-number {
+                width: 12%;
+            }
+
+            .col-product {
+                width: 25%;
+            }
+
+            .col-code {
+                width: 20%;
+            }
+
+            .col-status {
+                width: 25%;
+            }
+
+            .col-notes {
+                width: 18%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 0.5rem;
+            }
+
+            .form-section,
+            .products-section {
+                padding: 1rem;
+            }
+
+            .products-table {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* אנימציות */
+        .form-section,
+        .products-section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* שיפור חזותי לטבלה */
+        .products-table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* סטייל לפלט מוכן */
+        .output-section {
+            background: #f7fafc;
+            border: 2px dashed #2c7a7b;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .output-section.show {
+            display: block;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .output-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            text-align: right;
+            white-space: pre-line;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .output-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            direction: rtl;
+        }
+
+        .output-table th,
+        .output-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .output-table th {
+            background-color: #2c7a7b;
+            color: white;
+            font-weight: bold;
+        }
+
+        .output-table tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .output-table .col-num {
+            width: 10%;
+        }
+
+        .output-table .col-code {
+            width: 25%;
+        }
+
+        .output-table .col-status {
+            width: 20%;
+        }
+
+        .output-table .col-qty {
+            width: 15%;
+        }
+
+        .output-table .col-notes {
+            width: 30%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>פלטפורמת הזמנת דומגאות</h1>
+        <p>מערכת מתקדמת לניהול וזימון הזמנות עם סביבה מוצרים מפורטת</p>
+    </div>
+
+    <div class="container">
+        <div class="form-section">
+            <h2 class="form-title">פרטי ההזמנה הכלליים</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="order-name" class="required">שם המזמין</label>
+                    <input type="text" id="order-name" placeholder="הזן שם המזמין">
+                </div>
+
+                <div class="form-group">
+                    <label for="customer-name" class="required">שם הלקוח</label>
+                    <input type="text" id="customer-name" placeholder="הזן שם הלקוח">
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery-date" class="required">תאריך איסוף מתוכנן</label>
+                    <input type="date" id="delivery-date">
+                </div>
+
+                <div class="form-group">
+                    <label for="hour-request" class="required">שעת איסוף מבוקשת</label>
+                    <select id="hour-request">
+                        <option value="">בחר שעה</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="products-section">
+            <h2 class="products-title">פרטי המוצרים להזמנה</h2>
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th class="col-number">מספר</th>
+                        <th class="col-product">מק״ט</th>
+                        <th class="col-code">מצב מוצר</th>
+                        <th class="col-status">כמות</th>
+                        <th class="col-notes">הערות</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-number">1</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">2</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">3</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">4</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">5</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">6</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">7</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">8</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">9</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">10</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">11</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">12</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">13</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">14</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">15</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">16</td>
+                        <td><input type="text" placeholder="מק״ט המוצר"></td>
+                        <td>
+                            <select>
+                                <option value="">בחר מצב</option>
+                                <option value="אפוי">אפוי</option>
+                                <option value="קפוא">קפוא</option>
+                            </select>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="viewData()">צפה בנתונים</button>
+                <button class="btn btn-info" onclick="exportData()">ייצא לקובץ</button>
+                <button class="btn btn-secondary" onclick="clearForm()">נקה טופס</button>
+                <button class="btn btn-warning" onclick="addRow()">שלח במייל</button>
+                <button class="btn btn-success" onclick="generateOutput()">שתף ווטסאפ</button>
+            </div>
+        </div>
+
+        <div class="output-section" id="output-section">
+            <h3 style="color: #2c7a7b; margin-bottom: 1rem;">פלט מוכן לשליחה:</h3>
+            <div class="output-content" id="output-content"></div>
+            <div style="margin-top: 1rem; text-align: center;">
+                <button class="btn btn-primary" onclick="copyToClipboard()">העתק טקסט</button>
+                <button class="btn btn-success" onclick="shareWhatsApp()">שתף בווטסאפ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addRow() {
+            const tbody = document.querySelector('.products-table tbody');
+            const currentRows = tbody.querySelectorAll('tr').length;
+            const newRowNumber = currentRows + 1;
+            
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="row-number">${newRowNumber}</td>
+                <td><input type="text" placeholder="מק״ט המוצר"></td>
+                <td>
+                    <select>
+                        <option value="">בחר מצב</option>
+                        <option value="אפוי">אפוי</option>
+                        <option value="קפוא">קפוא</option>
+                    </select>
+                </td>
+                <td><input type="number" placeholder="כמות" min="1"></td>
+                <td><input type="text" placeholder="הערות"></td>
+            `;
+            tbody.appendChild(newRow);
+        }
+
+        function viewData() {
+            generateOutput();
+        }
+
+        function clearForm() {
+            // נקה שדות כלליים
+            document.getElementById('order-name').value = '';
+            document.getElementById('customer-name').value = '';
+            document.getElementById('delivery-date').value = '';
+            document.getElementById('hour-request').value = '';
+            
+            // נקה טבלת מוצרים
+            const inputs = document.querySelectorAll('.products-table input');
+            inputs.forEach(input => input.value = '');
+            
+            const selects = document.querySelectorAll('.products-table select');
+            selects.forEach(select => select.value = '');
+            
+            // הסתר פלט
+            document.getElementById('output-section').classList.remove('show');
+        }
+
+        function generateOutput() {
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            let headerHtml = `
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 20px;">הזמנת דומגאות</div>
+                <div style="margin-bottom: 15px;">
+                    <div><strong>שם המזמין:</strong> ${orderName}</div>
+                    <div><strong>שם הלקוח:</strong> ${customerName}</div>
+                    <div><strong>תאריך איסוף מתוכנן:</strong> ${deliveryDate}</div>
+                    <div><strong>שעת איסוף מבוקשת:</strong> ${hourRequest}</div>
+                </div>
+                <div style="font-weight: bold; margin-bottom: 10px;">פרטי המוצרים:</div>
+            `;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            let hasProducts = false;
+            let tableRows = '';
+            const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
+
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    hasProducts = true;
+                    const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
+                    tableRows += `
+                        <tr>
+                            <td class="col-num">${hebrewLetter}</td>
+                            <td class="col-code">${code || ''}</td>
+                            <td class="col-status">${status || ''}</td>
+                            <td class="col-qty">${quantity || ''}</td>
+                            <td class="col-notes">${notes || ''}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            let tableHtml = '';
+            if (hasProducts) {
+                tableHtml = `
+                    <table class="output-table">
+                        <thead>
+                            <tr>
+                                <th class="col-num">מספר</th>
+                                <th class="col-code">מק״ט</th>
+                                <th class="col-status">מצב מוצר</th>
+                                <th class="col-qty">כמות</th>
+                                <th class="col-notes">הערות</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                tableHtml = '<div>אין מוצרים</div>';
+            }
+
+            document.getElementById('output-content').innerHTML = headerHtml + tableHtml;
+            document.getElementById('output-section').classList.add('show');
+        }
+
+        function copyToClipboard() {
+            // יצירת טקסט נקי מה-HTML לצורך העתקה
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            let copyText = `הזמנת דומגאות\n\n`;
+            copyText += `שם המזמין: ${orderName}\n`;
+            copyText += `שם הלקוח: ${customerName}\n`;
+            copyText += `תאריך איסוף מתוכנן: ${deliveryDate}\n`;
+            copyText += `שעת איסוף מבוקשת: ${hourRequest}\n\n`;
+            copyText += `פרטי המוצרים:\n`;
+            copyText += `מספר | מק״ט | מצב מוצר | כמות | הערות\n`;
+            copyText += `-----|------|---------|-------|-------\n`;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            let hasProducts = false;
+            const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
+
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    hasProducts = true;
+                    const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
+                    copyText += `${hebrewLetter} | ${code || ''} | ${status || ''} | ${quantity || ''} | ${notes || ''}\n`;
+                }
+            });
+
+            if (!hasProducts) {
+                copyText += `אין מוצרים\n`;
+            }
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                alert('הטקסט הועתק ללוח!');
+            });
+        }
+
+        function shareWhatsApp() {
+            // יצירת טקסט נקי לשיתוף
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            let shareText = `הזמנת דומגאות\n\n`;
+            shareText += `שם המזמין: ${orderName}\n`;
+            shareText += `שם הלקוח: ${customerName}\n`;
+            shareText += `תאריך איסוף מתוכנן: ${deliveryDate}\n`;
+            shareText += `שעת איסוף מבוקשת: ${hourRequest}\n\n`;
+            shareText += `פרטי המוצרים:\n`;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            let hasProducts = false;
+            let productCount = 0;
+            const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
+
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    hasProducts = true;
+                    const hebrewLetter = hebrewLetters[productCount] || (productCount + 1).toString();
+                    productCount++;
+                    shareText += `${hebrewLetter}. מק״ט: ${code || 'לא צוין'}, מצב: ${status || 'לא צוין'}, כמות: ${quantity || 'לא צוין'}`;
+                    if (notes) {
+                        shareText += `, הערות: ${notes}`;
+                    }
+                    shareText += `\n`;
+                }
+            });
+
+            if (!hasProducts) {
+                shareText += `אין מוצרים`;
+            }
+
+            const encodedText = encodeURIComponent(shareText);
+            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+        }
+
+        function exportData() {
+            // יצוא לאקסל
+            alert('מייצא נתונים לאקסל... 📊');
+            
+            // יצירת נתוני CSV
+            let csvContent = "שם המזמין,שם הלקוח,תאריך איסוף מתוכנן,שעת איסוף מבוקשת,מספר שורה,מקט,מצב מוצר,כמות\n";
+            
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const rowNumber = index + 1;
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+
+                if (code || status || quantity) {
+                    csvContent += `"${orderName}","${customerName}","${deliveryDate}","${hourRequest}","${rowNumber}","${code}","${status}","${quantity}"\n`;
+                }
+            });
+
+            // הורדת הקובץ
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `הזמנת_דומגאות_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        // אתחול תאריך לתאריך נוכחי
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('delivery-date').value = today;
+        });
+    </script>
+</body>
+</html>
