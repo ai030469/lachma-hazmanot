@@ -808,4 +808,122 @@
             let copyText = `הזמנת דומגאות\n\n`;
             copyText += `שם המזמין: ${orderName}\n`;
             copyText += `שם הלקוח: ${customerName}\n`;
-            copyText += `תאריך איסוף מתוכנ
+            copyText += `תאריך איסוף מתוכנן: ${deliveryDate}\n`;
+            copyText += `שעת איסוף מבוקשת: ${hourRequest}\n\n`;
+            copyText += `פרטי המוצרים:\n`;
+            copyText += `מספר | מק״ט | מצב מוצר | כמות | הערות\n`;
+            copyText += `-----|------|---------|-------|-------\n`;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            let hasProducts = false;
+            const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
+
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    hasProducts = true;
+                    const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
+                    copyText += `${hebrewLetter} | ${code || ''} | ${status || ''} | ${quantity || ''} | ${notes || ''}\n`;
+                }
+            });
+
+            if (!hasProducts) {
+                copyText += `אין מוצרים\n`;
+            }
+
+            navigator.clipboard.writeText(copyText).then(() => {
+                alert('הטקסט הועתק ללוח!');
+            });
+        }
+
+        function shareWhatsApp() {
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            let shareText = `הזמנת דומגאות\n\n`;
+            shareText += `שם המזמין: ${orderName}\n`;
+            shareText += `שם הלקוח: ${customerName}\n`;
+            shareText += `תאריך איסוף מתוכנן: ${deliveryDate}\n`;
+            shareText += `שעת איסוף מבוקשת: ${hourRequest}\n\n`;
+            shareText += `פרטי המוצרים:\n`;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            let hasProducts = false;
+            let productCount = 0;
+            const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
+
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    hasProducts = true;
+                    const hebrewLetter = hebrewLetters[productCount] || (productCount + 1).toString();
+                    productCount++;
+                    shareText += `${hebrewLetter}. מק״ט: ${code || 'לא צוין'}, מצב: ${status || 'לא צוין'}, כמות: ${quantity || 'לא צוין'}`;
+                    if (notes) {
+                        shareText += `, הערות: ${notes}`;
+                    }
+                    shareText += `\n`;
+                }
+            });
+
+            if (!hasProducts) {
+                shareText += `אין מוצרים`;
+            }
+
+            const encodedText = encodeURIComponent(shareText);
+            window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+        }
+
+        function exportData() {
+            alert('מייצא נתונים לקובץ... 📊');
+            
+            let csvContent = "שם המזמין,שם הלקוח,תאריך איסוף מתוכנן,שעת איסוף מבוקשת,מספר שורה,מקט,מצב מוצר,כמות,הערות\n";
+            
+            const orderName = document.getElementById('order-name').value;
+            const customerName = document.getElementById('customer-name').value;
+            const deliveryDate = document.getElementById('delivery-date').value;
+            const hourRequest = document.getElementById('hour-request').value;
+
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            rows.forEach((row, index) => {
+                const inputs = row.querySelectorAll('input');
+                const selects = row.querySelectorAll('select');
+                const rowNumber = index + 1;
+                const code = inputs[0].value.trim();
+                const status = selects[0].value.trim();
+                const quantity = inputs[1].value.trim();
+                const notes = inputs[2].value.trim();
+
+                if (code || status || quantity || notes) {
+                    csvContent += `"${orderName}","${customerName}","${deliveryDate}","${hourRequest}","${rowNumber}","${code}","${status}","${quantity}","${notes}"\n`;
+                }
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `הזמנת_דומגאות_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('delivery-date').value = today;
+        });
+    </script>
+</body>
+</html>
