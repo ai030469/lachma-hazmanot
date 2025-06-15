@@ -914,7 +914,7 @@
         }
 
         function downloadCSV() {
-            alert('מייצא קובץ זהה לתצוגה... 📊');
+            alert('מייצא קובץ מסודר לאקסל... 📊');
             
             // קבלת הנתונים
             const orderName = document.getElementById('order-name').value;
@@ -924,24 +924,22 @@
             
             let csvContent = '';
             
-            // כותרת ראשית - בדיוק כמו בתצוגה
-            csvContent += ',,,,"הזמנת דוגמאות"\n';
-            csvContent += '\n';
+            // כותרת ראשית ממורכזת
+            csvContent += ',,,"הזמנת דוגמאות"\n';
             csvContent += '\n';
             
-            // פרטי ההזמנה - בדיוק כמו בתצוגה
-            csvContent += `,,,"שם המזמין: ${orderName}"\n`;
-            csvContent += `,,,"שם הלקוח: ${customerName}"\n`;
-            csvContent += `,,,"תאריך איסוף מתוכנן: ${deliveryDate}"\n`;
-            csvContent += `,,,"שעת איסוף מבוקשת: ${hourRequest}"\n`;
-            csvContent += '\n';
+            // פרטי ההזמנה
+            csvContent += `,"שם המזמין: ${orderName}"\n`;
+            csvContent += `,"שם הלקוח: ${customerName}"\n`;
+            csvContent += `,"תאריך איסוף מתוכנן: ${deliveryDate}"\n`;
+            csvContent += `,"שעת איסוף מבוקשת: ${hourRequest}"\n`;
             csvContent += '\n';
             
             // כותרת טבלת מוצרים
-            csvContent += ',,,,"פרטי המוצרים:"\n';
+            csvContent += ',"פרטי המוצרים:"\n';
             csvContent += '\n';
             
-            // כותרות העמודות - בדיוק כמו בתצוגה
+            // כותרות העמודות
             csvContent += '"מספר","מק״ט","מצב מוצר","כמות","הערות"\n';
             
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
@@ -975,7 +973,7 @@
             link.click();
             
             setTimeout(() => {
-                alert('הקובץ הורד בפורמט זהה לתצוגה! 🎉');
+                alert('הקובץ הורד בפורמט מסודר! 🎉');
             }, 1000);
         }
 
