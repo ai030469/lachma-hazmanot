@@ -948,7 +948,7 @@
         }
 
         function downloadCSV() {
-            alert('מייצא קובץ Excel עם רוחב עמודות מוגדר... 📊');
+            alert('מייצא קובץ לאקסל... 📊');
             
             // קבלת הנתונים
             const orderName = document.getElementById('order-name').value;
@@ -956,94 +956,25 @@
             const deliveryDate = document.getElementById('delivery-date').value;
             const hourRequest = document.getElementById('hour-request').value;
             
-            // יצירת HTML Table עם סטיילים לאקסל
-            let excelContent = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head>
-                    <meta charset="utf-8">
-                    <!--[if gte mso 9]>
-                    <xml>
-                        <x:ExcelWorkbook>
-                            <x:ExcelWorksheets>
-                                <x:ExcelWorksheet>
-                                    <x:Name>הזמנת דוגמאות</x:Name>
-                                    <x:WorksheetOptions>
-                                        <x:DisplayGridlines/>
-                                        <x:Print>
-                                            <x:ValidPrinterInfo/>
-                                        </x:Print>
-                                    </x:WorksheetOptions>
-                                </x:ExcelWorksheet>
-                            </x:ExcelWorksheets>
-                        </x:ExcelWorkbook>
-                    </xml>
-                    <![endif]-->
-                    <style>
-                        .col-a { mso-width-source: userset; width: 154pt; } /* 19.25 * 8 = 154pt */
-                        .col-b { mso-width-source: userset; width: 80pt; }
-                        .col-c { mso-width-source: userset; width: 80pt; }
-                        .col-d { mso-width-source: userset; width: 60pt; }
-                        .col-e { mso-width-source: userset; width: 100pt; }
-                    </style>
-                </head>
-                <body>
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <colgroup>
-                            <col class="col-a">
-                            <col class="col-b">
-                            <col class="col-c">
-                            <col class="col-d">
-                            <col class="col-e">
-                        </colgroup>
-                        <tr>
-                            <td colspan="5" style="text-align: center; font-weight: bold; font-size: 16pt;">הזמנת דוגמאות</td>
-                        </tr>
-                        <tr><td colspan="5">&nbsp;</td></tr>
-                        <tr>
-                            <td style="font-weight: bold;">שם המזמין:</td>
-                            <td>${orderName}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">שם הלקוח:</td>
-                            <td>${customerName}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">תאריך איסוף מתוכנן:</td>
-                            <td>${deliveryDate}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">שעת איסוף מבוקשת:</td>
-                            <td>${hourRequest}</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr><td colspan="5">&nbsp;</td></tr>
-                        <tr>
-                            <td style="font-weight: bold;">פרטי המוצרים:</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr><td colspan="5">&nbsp;</td></tr>
-                        <tr style="background-color: #2c7a7b; color: white; font-weight: bold;">
-                            <td>מספר</td>
-                            <td>מק״ט</td>
-                            <td>מצב מוצר</td>
-                            <td>כמות</td>
-                            <td>הערות</td>
-                        </tr>
-            `;
+            let csvContent = '';
+            
+            // כותרת ראשית
+            csvContent += '"הזמנת דוגמאות",,,,\n';
+            csvContent += ',,,,\n';
+            
+            // פרטי ההזמנה - עמודה A עם רווחים לרוחב 19.25
+            csvContent += `"שם המזמין              ","${orderName}",,,\n`;
+            csvContent += `"שם הלקוח               ","${customerName}",,,\n`;
+            csvContent += `"תאריך איסוף מתוכנן      ","${deliveryDate}",,,\n`;
+            csvContent += `"שעת איסוף מבוקשת       ","${hourRequest}",,,\n`;
+            csvContent += ',,,,\n';
+            
+            // כותרת טבלת מוצרים
+            csvContent += '"פרטי המוצרים:",,,,\n';
+            csvContent += ',,,,\n';
+            
+            // כותרות העמודות
+            csvContent += '"מספר                ","מק״ט","מצב מוצר","כמות","הערות"\n';
             
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
             const rows = document.querySelectorAll('.products-table tbody tr');
@@ -1060,41 +991,24 @@
                 if (code || status || quantity || notes) {
                     hasProducts = true;
                     const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
-                    excelContent += `
-                        <tr>
-                            <td>${hebrewLetter}</td>
-                            <td>${code}</td>
-                            <td>${status}</td>
-                            <td>${quantity}</td>
-                            <td>${notes}</td>
-                        </tr>
-                    `;
+                    // רווחים לעמודה A לרוחב כ-19.25
+                    csvContent += `"${hebrewLetter}                ","${code}","${status}","${quantity}","${notes}"\n`;
                 }
             });
             
             if (!hasProducts) {
-                excelContent += `
-                    <tr>
-                        <td colspan="5" style="text-align: center;">אין מוצרים</td>
-                    </tr>
-                `;
+                csvContent += '"                     ","","אין מוצרים","",""\n';
             }
 
-            excelContent += `
-                    </table>
-                </body>
-                </html>
-            `;
-
             // יצירת והורדת הקובץ
-            const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+            const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `הזמנת_דוגמאות_${new Date().toISOString().split('T')[0]}.xls`;
+            link.download = `הזמנת_דוגמאות_${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
             
             setTimeout(() => {
-                alert('הקובץ הורד עם עמודה A ברוחב 19.25! 🎉');
+                alert('הקובץ הורד בהצלחה! 🎉');
             }, 1000);
         }
 
