@@ -948,7 +948,7 @@
         }
 
         function downloadCSV() {
-            alert('מייצא קובץ לאקסל... 📊');
+            alert('מייצא קובץ מסודר לאקסל... 📊');
             
             // קבלת הנתונים
             const orderName = document.getElementById('order-name').value;
@@ -962,11 +962,11 @@
             csvContent += '"הזמנת דוגמאות",,,,\n';
             csvContent += ',,,,\n';
             
-            // פרטי ההזמנה - עמודה A עם רווחים לרוחב 19.25
-            csvContent += `"שם המזמין              ","${orderName}",,,\n`;
-            csvContent += `"שם הלקוח               ","${customerName}",,,\n`;
-            csvContent += `"תאריך איסוף מתוכנן      ","${deliveryDate}",,,\n`;
-            csvContent += `"שעת איסוף מבוקשת       ","${hourRequest}",,,\n`;
+            // פרטי ההזמנה - כל פרט בשורה נפרדת עם תווית ברורה
+            csvContent += `"שם המזמין","${orderName}",,,\n`;
+            csvContent += `"שם הלקוח","${customerName}",,,\n`;
+            csvContent += `"תאריך איסוף מתוכנן","${deliveryDate}",,,\n`;
+            csvContent += `"שעת איסוף מבוקשת","${hourRequest}",,,\n`;
             csvContent += ',,,,\n';
             
             // כותרת טבלת מוצרים
@@ -974,7 +974,7 @@
             csvContent += ',,,,\n';
             
             // כותרות העמודות
-            csvContent += '"מספר                ","מק״ט","מצב מוצר","כמות","הערות"\n';
+            csvContent += '"מספר","מק״ט","מצב מוצר","כמות","הערות"\n';
             
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
             const rows = document.querySelectorAll('.products-table tbody tr');
@@ -991,13 +991,12 @@
                 if (code || status || quantity || notes) {
                     hasProducts = true;
                     const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
-                    // רווחים לעמודה A לרוחב כ-19.25
-                    csvContent += `"${hebrewLetter}                ","${code}","${status}","${quantity}","${notes}"\n`;
+                    csvContent += `"${hebrewLetter}","${code}","${status}","${quantity}","${notes}"\n`;
                 }
             });
             
             if (!hasProducts) {
-                csvContent += '"                     ","","אין מוצרים","",""\n';
+                csvContent += '"","","אין מוצרים","",""\n';
             }
 
             // יצירת והורדת הקובץ
@@ -1008,7 +1007,7 @@
             link.click();
             
             setTimeout(() => {
-                alert('הקובץ הורד בהצלחה! 🎉');
+                alert('הקובץ הורד בפורמט מסודר ונקי! 🎉');
             }, 1000);
         }
 
