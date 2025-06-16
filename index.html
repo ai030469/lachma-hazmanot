@@ -338,15 +338,40 @@
             width: 30%;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* סטייל לתפריט יצוא */
+        .export-menu {
+            background: white;
+            border: 2px solid #2c7a7b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .export-menu.show {
+            display: block;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .export-menu h4 {
+            color: #2c7a7b;
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .export-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .export-options .btn {
+            flex: 1;
+            min-width: 150px;
+            max-width: 200px;
         }
 
         .products-table tbody tr:nth-child(even) {
@@ -692,9 +717,18 @@
 
             <div class="action-buttons">
                 <button class="btn btn-primary" onclick="viewData()">צפה בנתונים</button>
-                <button class="btn btn-info" onclick="downloadCSV()">ייצא לקובץ</button>
+                <button class="btn btn-info" onclick="showExportOptions()">ייצא קובץ</button>
                 <button class="btn btn-secondary" onclick="clearForm()">נקה טופס</button>
                 <button class="btn btn-success" onclick="shareWhatsApp()">שתף ווטסאפ</button>
+            </div>
+        </div>
+
+        <div class="export-menu" id="export-menu">
+            <h4>בחר סוג יצוא:</h4>
+            <div class="export-options">
+                <button class="btn btn-info" onclick="downloadCSV()">📊 ייצא לאקסל</button>
+                <button class="btn btn-warning" onclick="generatePrintVersion()">🖨️ ייצא להדפסה</button>
+                <button class="btn btn-secondary" onclick="hideExportMenu()">❌ סגור</button>
             </div>
         </div>
 
@@ -925,22 +959,22 @@
             let csvContent = '';
             
             // כותרת ראשית
-            csvContent += '"הזמנת דוגמאות",,,,\n';
+            csvContent += '"הזמנת דוגמאות                   ",,,,\n';
             csvContent += ',,,,\n';
             
-            // פרטי ההזמנה - כל פרט בשורה נפרדת עם תווית ברורה
-            csvContent += `"שם המזמין","${orderName}",,,\n`;
-            csvContent += `"שם הלקוח","${customerName}",,,\n`;
-            csvContent += `"תאריך איסוף מתוכנן","${deliveryDate}",,,\n`;
-            csvContent += `"שעת איסוף מבוקשת","${hourRequest}",,,\n`;
+            // פרטי ההזמנה - עמודה A ברוחב 19.25
+            csvContent += `"שם המזמין              ","${orderName}",,,\n`;
+            csvContent += `"שם הלקוח               ","${customerName}",,,\n`;
+            csvContent += `"תאריך איסוף מתוכנן      ","${deliveryDate}",,,\n`;
+            csvContent += `"שעת איסוף מבוקשת       ","${hourRequest}",,,\n`;
             csvContent += ',,,,\n';
             
             // כותרת טבלת מוצרים
-            csvContent += '"פרטי המוצרים:",,,,\n';
+            csvContent += '"פרטי המוצרים:         ",,,,\n';
             csvContent += ',,,,\n';
             
             // כותרות העמודות
-            csvContent += '"מספר","מק״ט","מצב מוצר","כמות","הערות"\n';
+            csvContent += '"מספר            ","מק״ט","מצב מוצר","כמות","הערות"\n';
             
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
             const rows = document.querySelectorAll('.products-table tbody tr');
@@ -957,12 +991,14 @@
                 if (code || status || quantity || notes) {
                     hasProducts = true;
                     const hebrewLetter = hebrewLetters[index] || (index + 1).toString();
-                    csvContent += `"${hebrewLetter}","${code}","${status}","${quantity}","${notes}"\n`;
+                    // הוספת רווחים לעמודה A כדי להגיע לרוחב 19.25
+                    const paddedLetter = hebrewLetter + "            ";
+                    csvContent += `"${paddedLetter}","${code}","${status}","${quantity}","${notes}"\n`;
                 }
             });
             
             if (!hasProducts) {
-                csvContent += '"","","אין מוצרים","",""\n';
+                csvContent += '"                ","","אין מוצרים","",""\n';
             }
 
             // יצירת והורדת הקובץ
@@ -973,7 +1009,7 @@
             link.click();
             
             setTimeout(() => {
-                alert('הקובץ הורד בפורמט מסודר ונקי! 🎉');
+                alert('הקובץ הורד עם עמודה A ברוחב 19.25! 🎉');
             }, 1000);
         }
 
