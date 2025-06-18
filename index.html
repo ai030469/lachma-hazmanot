@@ -158,6 +158,68 @@
             box-shadow: 0 0 0 2px rgba(44, 122, 123, 0.1);
         }
 
+        /* סטייל לשדה autocomplete */
+        .autocomplete-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .autocomplete-input, .product-autocomplete-input {
+            width: 100%;
+            padding: 0.5rem 25px 0.5rem 0.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+        }
+
+        .autocomplete-input {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: left 8px center;
+            background-repeat: no-repeat;
+            background-size: 16px 12px;
+        }
+
+        .autocomplete-input:focus, .product-autocomplete-input:focus {
+            outline: none;
+            border-color: #2c7a7b;
+            box-shadow: 0 0 0 2px rgba(44, 122, 123, 0.1);
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .autocomplete-suggestion {
+            padding: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .autocomplete-suggestion:hover,
+        .autocomplete-suggestion.selected {
+            background-color: #2c7a7b;
+            color: white;
+        }
+
+        .autocomplete-suggestion:last-child {
+            border-bottom: none;
+        }
+
         .row-number {
             background-color: #f7fafc;
             font-weight: 600;
@@ -338,42 +400,6 @@
             width: 30%;
         }
 
-        /* סטייל לתפריט יצוא */
-        .export-menu {
-            background: white;
-            border: 2px solid #2c7a7b;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 1rem;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            display: none;
-        }
-
-        .export-menu.show {
-            display: block;
-            animation: fadeInUp 0.4s ease-out;
-        }
-
-        .export-menu h4 {
-            color: #2c7a7b;
-            text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .export-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .export-options .btn {
-            flex: 1;
-            min-width: 150px;
-            max-width: 200px;
-        }
-
         .products-table tbody tr:nth-child(even) {
             background-color: #f8f9fa;
         }
@@ -460,268 +486,7 @@
                 <div class="form-group">
                     <label for="order-name" class="required">שם המזמין</label>
                     <input type="text" id="order-name" placeholder="הזן שם המזמין">
-                </div>
-
-                <div class="form-group">
-                    <label for="customer-name" class="required">שם הלקוח</label>
-                    <input type="text" id="customer-name" placeholder="הזן שם הלקוח">
-                </div>
-
-                <div class="form-group">
-                    <label for="delivery-date" class="required">תאריך איסוף מתוכנן</label>
-                    <input type="date" id="delivery-date">
-                </div>
-
-                <div class="form-group">
-                    <label for="hour-request" class="required">שעת איסוף מבוקשת</label>
-                    <select id="hour-request">
-                        <option value="">בחר שעה</option>
-                        <option value="08:00">08:00</option>
-                        <option value="09:00">09:00</option>
-                        <option value="10:00">10:00</option>
-                        <option value="11:00">11:00</option>
-                        <option value="12:00">12:00</option>
-                        <option value="13:00">13:00</option>
-                        <option value="14:00">14:00</option>
-                        <option value="15:00">15:00</option>
-                        <option value="16:00">16:00</option>
-                        <option value="17:00">17:00</option>
-                    </select>
-                </div>
             </div>
-        </div>
-
-        <div class="products-section">
-            <h2 class="products-title">פרטי המוצרים להזמנה</h2>
-            <table class="products-table">
-                <thead>
-                    <tr>
-                        <th class="col-number">מספר</th>
-                        <th class="col-product">מק״ט</th>
-                        <th class="col-code">מצב מוצר</th>
-                        <th class="col-status">כמות</th>
-                        <th class="col-notes">הערות</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="row-number">1</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">2</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">3</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">4</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">5</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">6</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">7</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">8</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">9</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">10</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">11</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">12</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">13</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">14</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">15</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                    <tr>
-                        <td class="row-number">16</td>
-                        <td><input type="text" placeholder="מק״ט המוצר"></td>
-                        <td>
-                            <select>
-                                <option value="">בחר מצב</option>
-                                <option value="אפוי">אפוי</option>
-                                <option value="קפוא">קפוא</option>
-                            </select>
-                        </td>
-                        <td><input type="number" placeholder="כמות" min="1"></td>
-                        <td><input type="text" placeholder="הערות"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="viewData()">צפה בנתונים</button>
-                <button class="btn btn-info" onclick="downloadCSV()">ייצא קובץ</button>
-                <button class="btn btn-secondary" onclick="clearForm()">נקה טופס</button>
-                <button class="btn btn-success" onclick="shareWhatsApp()">שתף ווטסאפ</button>
-            </div>
-        </div>
 
         <div class="output-section" id="output-section">
             <h3 style="color: #2c7a7b; margin-bottom: 1rem;">פלט מוכן לשליחה:</h3>
@@ -734,6 +499,486 @@
     </div>
 
     <script>
+        // אפשרויות autocomplete למצב מוצר
+        const statusOptions = ['אפוי', 'קפוא'];
+
+        // רשימת מוצרים לאוטו-השלמה
+        const productsList = [
+            { code: '531', name: 'לחם פרנה סלט' },
+            { code: '532', name: 'לחם פרנה משפחתית' },
+            { code: '535', name: 'פוקאצ\'ה עגבניות /זית' },
+            { code: '537', name: 'פוקאצ\'ה תערובת גרעי' },
+            { code: '539', name: 'לחם פרנה 260' },
+            { code: '546', name: 'לחם פרנה לכריך קטן' },
+            { code: '547', name: 'לחם פרנה לכריך' },
+            { code: '554', name: 'לחם 100% שיפון' },
+            { code: '600', name: 'משלוח מונית לבקשת רי' },
+            { code: '610', name: 'פיצה תרד בולגרית' },
+            { code: '611', name: 'פיצה פטריות וכמהין' },
+            { code: '613', name: 'פיצה חמאה עגבניות' },
+            { code: '614', name: 'פיצה בצלים מקורמלים' },
+            { code: '615', name: 'פיצה זוקיני פורטובלו' },
+            { code: '618', name: 'פיצה מרגריטה' },
+            { code: '619', name: 'פיצה מרגריטה זיתים' },
+            { code: '723', name: 'באגט כריך' },
+            { code: '733', name: 'לחמניית רוסטיק' },
+            { code: '734', name: 'לחמניית רוסטיק כפרי' },
+            { code: '735', name: 'כדור פיצה ג\'אג\'א' },
+            { code: '752', name: 'כדור פיצה נאפולי' },
+            { code: '756', name: 'כדור פיצה אליאברם' },
+            { code: '760', name: 'בסיס פיצה 20/30' },
+            { code: '766', name: 'לחם אגוזים וצימוקים' },
+            { code: '767', name: 'לחם אגוזים קלאסי' },
+            { code: '769', name: 'לחם קלמטה קלאסי' },
+            { code: '785', name: 'פיציולו בלנקה' },
+            { code: '788', name: 'באגט סבא ג\'בטו' },
+            { code: '811', name: 'לחם אברהם' },
+            { code: '829', name: 'לחמנית מחורצת מיקס ש' },
+            { code: '831', name: 'לחמנית סליידר עם שו' },
+            { code: '833', name: 'לחמנית המבורגר מחורצ' },
+            { code: '839', name: 'חצי באגט איטלקי' },
+            { code: '840', name: 'פיסל קצר לכריך' },
+            { code: '841', name: 'לחמנית סלים פרוס' },
+            { code: '842', name: 'לחמנית המבורגרדלי פר' },
+            { code: '844', name: 'לחמניה פרוסה להמבורג' },
+            { code: '861', name: 'קסטן טוסט פרוס 20 פ' },
+            { code: '869', name: 'לחמנית פולאפרט לבן' },
+            { code: '871', name: 'כריך לבן' },
+            { code: '875', name: 'מיני דגנים' },
+            { code: '877', name: 'לחמנית המבורגר סלייד' },
+            { code: '881', name: 'לחם כוסמין מלא' },
+            { code: '883', name: 'לחם שלושת הקמחים עם' },
+            { code: '885', name: 'לחם קסטן 13*13' },
+            { code: '887', name: 'לחם קסטן כוסמין' },
+            { code: '890', name: 'לחמון' },
+            { code: '894', name: 'כריך כפרי' },
+            { code: '897', name: 'המבורגר פרוס חלק' },
+            { code: '908', name: 'לחם שיפון' },
+            { code: '911', name: 'לחם קל' },
+            { code: '913', name: 'דגנים לכריכים' },
+            { code: '915', name: 'פוקצ\'ה 40/60' },
+            { code: '916', name: 'פלטה ג\'ירסולא' },
+            { code: '918', name: 'דגנים גדול' },
+            { code: '924', name: 'לחמנית ביאנקה' },
+            { code: '925', name: 'לח\' כפרית בציפוי דגנ' },
+            { code: '927', name: 'פיסל דגנים' },
+            { code: '932', name: 'לחם אישי לבן' },
+            { code: '933', name: 'לחם אישי דגנים' },
+            { code: '935', name: 'סטירטו שומשום' },
+            { code: '940', name: 'באגט איטלקי' },
+            { code: '945', name: 'רוסטיק' },
+            { code: '946', name: 'כריך ביאנקה' },
+            { code: '947', name: 'כריך דגנים' },
+            { code: '948', name: 'צ\'בטה כריך' },
+            { code: '950', name: 'צ\'בטה לבן' },
+            { code: '952', name: 'ביס צרפתית' },
+            { code: '953', name: 'ביס דגנים' },
+            { code: '961', name: 'לבן 30 15\\15 פרוס' },
+            { code: '971', name: 'מיני חלה' },
+            { code: '977', name: 'פלוט דגנים' },
+            { code: '979', name: 'לחמנית שומשום' },
+            { code: '980', name: 'סלופי המבורגר לבן' },
+            { code: '983', name: 'חלה תבנית' },
+            { code: '984', name: 'המבורגר בריבוע' },
+            { code: '986', name: 'כדור פוקצ\'ה 280 גרם' },
+            { code: '992', name: 'בצק לפיצה' },
+            { code: '1003', name: 'פילאס פטריות' },
+            { code: '1004', name: 'פילאס מנגולד /תרד' },
+            { code: '1005', name: 'פילאס פיצה' },
+            { code: '1006', name: 'פילאס בטעם קשקבל' },
+            { code: '2001', name: 'אצבעות בטעם קשקבל' },
+            { code: '3001', name: 'בורקס גבינה קטן' },
+            { code: '3002', name: 'בורקס תפו"א קטן' },
+            { code: '3003', name: 'בורקס גבינה ק' },
+            { code: '3006', name: 'בורקס תפו"א קטן ק' },
+            { code: '3011', name: 'בורקס גבינה גדול' },
+            { code: '3012', name: 'בורקס תפו"א גדול' },
+            { code: '3021', name: 'ג\'חנון חתוך' },
+            { code: '3026', name: 'קוביית בצק' },
+            { code: '3037', name: 'מקל זיוה גבינה' },
+            { code: '3038', name: 'מקל זיווה גבינה + זי' },
+            { code: '3051', name: 'פאן וניל' },
+            { code: '3053', name: 'פאן תפו"ע' },
+            { code: '4001', name: 'בורקיטס גבינה' },
+            { code: '4003', name: 'בורקיטס גבינה ק' },
+            { code: '4009', name: 'מיני בורקיטס' },
+            { code: '5009', name: 'בואיקוס תרד+גבינה' },
+            { code: '5010', name: 'בואיקוס בטעם קשקבל' },
+            { code: '5011', name: 'בואיקוס לה פטה חצילי' },
+            { code: '5012', name: 'בויוס בטעם קשקבל' },
+            { code: '5015', name: 'בואיקוס בטטה ועשבי ת' },
+            { code: '5500', name: 'מיני חמאה' },
+            { code: '5511', name: 'פרסבורגר פרג חלבי' },
+            { code: '5512', name: 'קרנץ במילוי בטעם שוק' },
+            { code: '5516', name: 'קרנץ קינמון אגוזים ח' },
+            { code: '5519', name: 'פרסבורגר ריקוטה חלבי' },
+            { code: '6001', name: 'נחש גבינה' },
+            { code: '6002', name: 'נחש תפו"א' },
+            { code: '6003', name: 'נחש פטריות' },
+            { code: '6004', name: 'נחש תרד+גבינה בד"צ' },
+            { code: '6008', name: 'נחש פיצה' },
+            { code: '6010', name: 'נחש גבינה פ' },
+            { code: '6011', name: 'נחש תרד גבינה פ' },
+            { code: '8446', name: 'פיתה שומשום' },
+            { code: '8811', name: 'פרסבורגר תפו"ע קנמון' },
+            { code: '8812', name: 'פרסבורגר גבינה מתוקה' },
+            { code: '8813', name: 'פרסבורגר ג.מתוקה אוכ' },
+            { code: '8814', name: 'קראנץ שוקולד פרווה' },
+            { code: '8819', name: 'פרסבורגר פרג פרווה' },
+            { code: '8961', name: 'קרנץ שוקולד' },
+            { code: '8964', name: 'קרנץ גבינה' },
+            { code: '9001', name: 'שפמנון שוקולד' },
+            { code: '9002', name: 'רוגלך' },
+            { code: '9003', name: 'גביניות' },
+            { code: '9004', name: 'תפוחית' },
+            { code: '9005', name: 'כיס אוכמניות' },
+            { code: '9006', name: 'קינמון' },
+            { code: '9007', name: 'קוראסון ביס' },
+            { code: '9008', name: 'כיס פרג' },
+            { code: '9010', name: 'דניש וניל' },
+            { code: '9018', name: 'קוראסון שוקולד קטן' },
+            { code: '9019', name: 'קוראסון שקדים' },
+            { code: '9021', name: 'קוראסון אגוזים קטן' },
+            { code: '9022', name: 'קוראסון ריק בינוני' },
+            { code: '9023', name: 'קוראסון חלבה' },
+            { code: '9029', name: 'ק.שוקולד+חלבה' },
+            { code: '9040', name: 'רוגעלך ירושלמי במילו' },
+            { code: '9043', name: 'סירופ מתוק 5 ליטר' },
+            { code: '9051', name: 'קוראסון חמאה אישי' },
+            { code: '9052', name: 'קוראסון חמאה שוקו אי' },
+            { code: '9805', name: 'לחם מחמצת עגבניות' },
+            { code: '9810', name: 'לחם אגוזים צימוקים כ' },
+            { code: '9901', name: 'לחם מחמצת כפרי' },
+            { code: '9902', name: 'לחם מחמצת זיתים' },
+            { code: '9903', name: 'לחם מחמצת עם קמח מלא' },
+            { code: '9904', name: 'לחם מחמצת עם דגנים' },
+            { code: '9905', name: 'לחם מחמצת צרפתי' },
+            { code: '9907', name: 'לחם מחמצת קלמטה' },
+            { code: '9909', name: 'לחם מחמצת אגוזים' },
+            { code: '9912', name: 'לחם מחמצת כוסמין' },
+            { code: '9913', name: 'לחם עם כוסמין ובצל' }
+        ];
+
+        // יצירת autocomplete לכל שדה מצב מוצר
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('delivery-date').value = today;
+
+            // הוספת autocomplete לכל שדה מצב מוצר
+            const autocompleteInputs = document.querySelectorAll('.autocomplete-input');
+            autocompleteInputs.forEach(input => {
+                setupAutocomplete(input);
+            });
+
+            // הוספת autocomplete לכל שדה מק"ט
+            const productInputs = document.querySelectorAll('.product-autocomplete-input');
+            productInputs.forEach(input => {
+                setupProductAutocomplete(input);
+            });
+
+            // הוספת מאזיני אירועים לבדיקת שורות מלאות
+            addRowCheckListeners();
+        });
+
+        function setupAutocomplete(input) {
+            const container = input.parentElement;
+            const suggestionsDiv = container.querySelector('.autocomplete-suggestions');
+            let selectedIndex = -1;
+
+            // הצגת כל האפשרויות בלחיצה על השדה או על החץ
+            input.addEventListener('click', function() {
+                if (suggestionsDiv.style.display === 'block') {
+                    hideSuggestions();
+                } else {
+                    showSuggestions(statusOptions);
+                }
+            });
+
+            input.addEventListener('input', function() {
+                const value = this.value.trim();
+                selectedIndex = -1;
+                
+                if (value === '') {
+                    showSuggestions(statusOptions);
+                    return;
+                }
+
+                const matches = statusOptions.filter(option => 
+                    option.includes(value) || option.startsWith(value.charAt(0))
+                );
+
+                if (matches.length > 0) {
+                    showSuggestions(matches);
+                } else {
+                    hideSuggestions();
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                const suggestions = suggestionsDiv.querySelectorAll('.autocomplete-suggestion');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+                    updateSelection();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateSelection();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                        selectSuggestion(suggestions[selectedIndex].textContent);
+                    } else if (suggestionsDiv.style.display === 'block') {
+                        const firstSuggestion = suggestions[0];
+                        if (firstSuggestion) {
+                            selectSuggestion(firstSuggestion.textContent);
+                        }
+                    }
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
+                }
+            });
+
+            input.addEventListener('blur', function(e) {
+                // רק אם הלחיצה לא הייתה על הצעה
+                if (!e.relatedTarget || !e.relatedTarget.classList.contains('autocomplete-suggestion')) {
+                    setTimeout(() => hideSuggestions(), 150);
+                }
+            });
+
+            function showSuggestions(matches) {
+                suggestionsDiv.innerHTML = '';
+                matches.forEach(match => {
+                    const div = document.createElement('div');
+                    div.className = 'autocomplete-suggestion';
+                    div.textContent = match;
+                    div.addEventListener('mousedown', function(e) {
+                        e.preventDefault(); // מונע את blur
+                        selectSuggestion(match);
+                    });
+                    suggestionsDiv.appendChild(div);
+                });
+                suggestionsDiv.style.display = 'block';
+            }
+
+            function hideSuggestions() {
+                suggestionsDiv.style.display = 'none';
+                selectedIndex = -1;
+            }
+
+            function updateSelection() {
+                const suggestions = suggestionsDiv.querySelectorAll('.autocomplete-suggestion');
+                suggestions.forEach((suggestion, index) => {
+                    suggestion.classList.toggle('selected', index === selectedIndex);
+                });
+            }
+
+            function selectSuggestion(value) {
+                input.value = value;
+                hideSuggestions();
+                input.focus();
+                // הפעלת event חדש כדי שהמערכת תזהה שהשדה השתנה
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+
+        function setupProductAutocomplete(input) {
+            const container = input.parentElement;
+            const suggestionsDiv = container.querySelector('.autocomplete-suggestions');
+            let selectedIndex = -1;
+
+            input.addEventListener('input', function() {
+                const value = this.value.trim();
+                selectedIndex = -1;
+                
+                if (value === '') {
+                    hideSuggestions();
+                    return;
+                }
+
+                let matches = [];
+                
+                // בדיקה אם המשתמש הקליד ספרות (חיפוש לפי מק"ט)
+                if (/^\d/.test(value)) {
+                    matches = productsList.filter(product => 
+                        product.code.startsWith(value)
+                    ).map(product => ({
+                        display: `${product.code} - ${product.name}`,
+                        value: product.code
+                    }));
+                } else {
+                    // חיפוש לפי שם מוצר - אבל הערך שיירשם יהיה המק"ט
+                    matches = productsList.filter(product => 
+                        product.name.includes(value)
+                    ).map(product => ({
+                        display: `${product.name} (${product.code})`,
+                        value: product.code  // זה מה שיירשם בשדה
+                    }));
+                }
+
+                if (matches.length > 0) {
+                    showProductSuggestions(matches);
+                } else {
+                    hideSuggestions();
+                }
+            });
+
+            input.addEventListener('keydown', function(e) {
+                const suggestions = suggestionsDiv.querySelectorAll('.autocomplete-suggestion');
+                
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    selectedIndex = Math.min(selectedIndex + 1, suggestions.length - 1);
+                    updateProductSelection();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    selectedIndex = Math.max(selectedIndex - 1, -1);
+                    updateProductSelection();
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                        const value = suggestions[selectedIndex].getAttribute('data-value');
+                        selectProductSuggestion(value);
+                    } else if (suggestionsDiv.style.display === 'block') {
+                        const firstSuggestion = suggestions[0];
+                        if (firstSuggestion) {
+                            const value = firstSuggestion.getAttribute('data-value');
+                            selectProductSuggestion(value);
+                        }
+                    }
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
+                }
+            });
+
+            input.addEventListener('blur', function(e) {
+                // רק אם הלחיצה לא הייתה על הצעה
+                if (!e.relatedTarget || !e.relatedTarget.classList.contains('autocomplete-suggestion')) {
+                    setTimeout(() => hideSuggestions(), 150);
+                }
+            });
+
+            function showProductSuggestions(matches) {
+                suggestionsDiv.innerHTML = '';
+                matches.forEach(match => {
+                    const div = document.createElement('div');
+                    div.className = 'autocomplete-suggestion';
+                    div.textContent = match.display;
+                    div.setAttribute('data-value', match.value);
+                    div.addEventListener('mousedown', function(e) {
+                        e.preventDefault(); // מונע את blur
+                        selectProductSuggestion(match.value);
+                    });
+                    suggestionsDiv.appendChild(div);
+                });
+                suggestionsDiv.style.display = 'block';
+            }
+
+            function hideSuggestions() {
+                suggestionsDiv.style.display = 'none';
+                selectedIndex = -1;
+            }
+
+            function updateProductSelection() {
+                const suggestions = suggestionsDiv.querySelectorAll('.autocomplete-suggestion');
+                suggestions.forEach((suggestion, index) => {
+                    suggestion.classList.toggle('selected', index === selectedIndex);
+                });
+            }
+
+            function selectProductSuggestion(value) {
+                input.value = value;  // כאן יירשם רק המק"ט!
+                hideSuggestions();
+                input.focus();
+                // הפעלת event חדש כדי שהמערכת תזהה שהשדה השתנה
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+
+        function addRowCheckListeners() {
+            const tableInputs = document.querySelectorAll('.products-table input, .autocomplete-input, .product-autocomplete-input');
+            tableInputs.forEach(input => {
+                input.addEventListener('input', checkIfNeedAddRowButton);
+            });
+        }
+
+        function checkIfNeedAddRowButton() {
+            const rows = document.querySelectorAll('.products-table tbody tr');
+            let filledRows = 0;
+            
+            rows.forEach(row => {
+                const codeInput = row.querySelector('.product-autocomplete-input');
+                const statusInput = row.querySelector('.autocomplete-input');
+                const quantityInput = row.querySelector('input[placeholder="כמות"]');
+                const notesInput = row.querySelector('input[placeholder="הערות"]');
+                
+                const code = codeInput ? codeInput.value.trim() : '';
+                const status = statusInput ? statusInput.value.trim() : '';
+                const quantity = quantityInput ? quantityInput.value.trim() : '';
+                const notes = notesInput ? notesInput.value.trim() : '';
+
+                if (code || status || quantity || notes) {
+                    filledRows++;
+                }
+            });
+
+            const addRowBtn = document.getElementById('add-row-btn');
+            if (filledRows >= rows.length) {
+                addRowBtn.style.display = 'inline-flex';
+            } else {
+                addRowBtn.style.display = 'none';
+            }
+        }
+
+        function addNewRow() {
+            const tableBody = document.querySelector('.products-table tbody');
+            const currentRows = tableBody.querySelectorAll('tr').length;
+            const newRowNumber = currentRows + 1;
+            
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="row-number">${newRowNumber}</td>
+                <td>
+                    <div class="autocomplete-container">
+                        <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                        <div class="autocomplete-suggestions"></div>
+                    </div>
+                </td>
+                <td>
+                    <div class="autocomplete-container">
+                        <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                        <div class="autocomplete-suggestions"></div>
+                    </div>
+                </td>
+                <td><input type="number" placeholder="כמות" min="1"></td>
+                <td><input type="text" placeholder="הערות"></td>
+            `;
+            
+            tableBody.appendChild(newRow);
+            
+            // הוספת autocomplete לשדות החדשים
+            const newAutocompleteInput = newRow.querySelector('.autocomplete-input');
+            const newProductInput = newRow.querySelector('.product-autocomplete-input');
+            setupAutocomplete(newAutocompleteInput);
+            setupProductAutocomplete(newProductInput);
+            
+            // הוספת מאזיני אירועים לשדות החדשים
+            const newInputs = newRow.querySelectorAll('input');
+            newInputs.forEach(input => {
+                input.addEventListener('input', checkIfNeedAddRowButton);
+            });
+            
+            // הסתרת כפתור הוסף שורה (יופיע שוב כשהשורה החדשה תתמלא)
+            document.getElementById('add-row-btn').style.display = 'none';
+            
+            // גלילה לשורה החדשה
+            newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // פוקוס על השדה הראשון בשורה החדשה
+            newRow.querySelector('.product-autocomplete-input').focus();
+        }
+
         function viewData() {
             generateOutput();
         }
@@ -747,8 +992,18 @@
             const inputs = document.querySelectorAll('.products-table input');
             inputs.forEach(input => input.value = '');
             
-            const selects = document.querySelectorAll('.products-table select');
-            selects.forEach(select => select.value = '');
+            const autocompleteInputs = document.querySelectorAll('.autocomplete-input');
+            autocompleteInputs.forEach(input => input.value = '');
+            
+            // הסרת שורות נוספות (השארת רק 16 הראשונות)
+            const tableBody = document.querySelector('.products-table tbody');
+            const allRows = tableBody.querySelectorAll('tr');
+            for (let i = 16; i < allRows.length; i++) {
+                allRows[i].remove();
+            }
+            
+            // הסתרת כפתור הוסף שורה
+            document.getElementById('add-row-btn').style.display = 'none';
             
             document.getElementById('output-section').classList.remove('show');
         }
@@ -776,12 +1031,15 @@
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
 
             rows.forEach((row, index) => {
-                const inputs = row.querySelectorAll('input');
-                const selects = row.querySelectorAll('select');
-                const code = inputs[0].value.trim();
-                const status = selects[0].value.trim();
-                const quantity = inputs[1].value.trim();
-                const notes = inputs[2].value.trim();
+                const codeInput = row.querySelector('.product-autocomplete-input');
+                const statusInput = row.querySelector('.autocomplete-input');
+                const quantityInput = row.querySelector('input[placeholder="כמות"]');
+                const notesInput = row.querySelector('input[placeholder="הערות"]');
+                
+                const code = codeInput ? codeInput.value.trim() : '';
+                const status = statusInput ? statusInput.value.trim() : '';
+                const quantity = quantityInput ? quantityInput.value.trim() : '';
+                const notes = notesInput ? notesInput.value.trim() : '';
 
                 if (code || status || quantity || notes) {
                     hasProducts = true;
@@ -830,7 +1088,7 @@
             const deliveryDate = document.getElementById('delivery-date').value;
             const hourRequest = document.getElementById('hour-request').value;
 
-            let copyText = `הזמנת דומגאות\n\n`;
+            let copyText = `הזמנת דוגמאות\n\n`;
             copyText += `שם המזמין: ${orderName}\n`;
             copyText += `שם הלקוח: ${customerName}\n`;
             copyText += `תאריך איסוף מתוכנן: ${deliveryDate}\n`;
@@ -844,12 +1102,15 @@
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
 
             rows.forEach((row, index) => {
-                const inputs = row.querySelectorAll('input');
-                const selects = row.querySelectorAll('select');
-                const code = inputs[0].value.trim();
-                const status = selects[0].value.trim();
-                const quantity = inputs[1].value.trim();
-                const notes = inputs[2].value.trim();
+                const codeInput = row.querySelector('.product-autocomplete-input');
+                const statusInput = row.querySelector('.autocomplete-input');
+                const quantityInput = row.querySelector('input[placeholder="כמות"]');
+                const notesInput = row.querySelector('input[placeholder="הערות"]');
+                
+                const code = codeInput ? codeInput.value.trim() : '';
+                const status = statusInput ? statusInput.value.trim() : '';
+                const quantity = quantityInput ? quantityInput.value.trim() : '';
+                const notes = notesInput ? notesInput.value.trim() : '';
 
                 if (code || status || quantity || notes) {
                     hasProducts = true;
@@ -886,12 +1147,15 @@
             const hebrewLetters = ['א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע'];
 
             rows.forEach((row, index) => {
-                const inputs = row.querySelectorAll('input');
-                const selects = row.querySelectorAll('select');
-                const code = inputs[0].value.trim();
-                const status = selects[0].value.trim();
-                const quantity = inputs[1].value.trim();
-                const notes = inputs[2].value.trim();
+                const codeInput = row.querySelector('.product-autocomplete-input');
+                const statusInput = row.querySelector('.autocomplete-input');
+                const quantityInput = row.querySelector('input[placeholder="כמות"]');
+                const notesInput = row.querySelector('input[placeholder="הערות"]');
+                
+                const code = codeInput ? codeInput.value.trim() : '';
+                const status = statusInput ? statusInput.value.trim() : '';
+                const quantity = quantityInput ? quantityInput.value.trim() : '';
+                const notes = notesInput ? notesInput.value.trim() : '';
 
                 if (code || status || quantity || notes) {
                     hasProducts = true;
@@ -911,31 +1175,6 @@
 
             const encodedText = encodeURIComponent(shareText);
             window.open(`https://wa.me/?text=${encodedText}`, '_blank');
-        }
-
-        function exportData() {
-            // וודא שיש נתונים להצגה
-            generateOutput();
-            
-            // הצג תפריט אפשרויות שיתוף
-            const shareOptions = `
-                <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); margin-top: 15px;">
-                    <h4 style="color: #2c7a7b; margin-bottom: 15px; text-align: center;">בחר אפשרות שיתוף:</h4>
-                    <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
-                        <button onclick="downloadCSV()" class="btn btn-info" style="margin: 5px;">📊 הורד קובץ Excel</button>
-                        <button onclick="shareEmail()" class="btn btn-warning" style="margin: 5px;">📧 שלח במייל</button>
-                        <button onclick="shareWhatsApp()" class="btn btn-success" style="margin: 5px;">📱 שתף בווטסאפ</button>
-                        <button onclick="copyFullOutput()" class="btn btn-primary" style="margin: 5px;">📋 העתק טקסט מלא</button>
-                        <button onclick="hideShareOptions()" class="btn btn-secondary" style="margin: 5px;">❌ סגור</button>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('output-content').innerHTML += shareOptions;
-        }
-
-        function hideShareOptions() {
-            generateOutput(); // חזור לתצוגה הרגילה
         }
 
         function downloadCSV() {
@@ -972,12 +1211,15 @@
             let hasProducts = false;
             
             rows.forEach((row, index) => {
-                const inputs = row.querySelectorAll('input');
-                const selects = row.querySelectorAll('select');
-                const code = inputs[0].value.trim();
-                const status = selects[0].value.trim();
-                const quantity = inputs[1].value.trim();
-                const notes = inputs[2].value.trim();
+                const codeInput = row.querySelector('.product-autocomplete-input');
+                const statusInput = row.querySelector('.autocomplete-input');
+                const quantityInput = row.querySelector('input[placeholder="כמות"]');
+                const notesInput = row.querySelector('input[placeholder="הערות"]');
+                
+                const code = codeInput ? codeInput.value.trim() : '';
+                const status = statusInput ? statusInput.value.trim() : '';
+                const quantity = quantityInput ? quantityInput.value.trim() : '';
+                const notes = notesInput ? notesInput.value.trim() : '';
 
                 if (code || status || quantity || notes) {
                     hasProducts = true;
@@ -1001,31 +1243,332 @@
                 alert('הקובץ הורד בפורמט מסודר ונקי! 🎉');
             }, 1000);
         }
-
-        function shareEmail() {
-            const outputContent = document.getElementById('output-content').innerHTML;
-            const textContent = document.getElementById('output-content').innerText;
-            
-            const subject = encodeURIComponent('הזמנת דוגמאות');
-            const body = encodeURIComponent(textContent);
-            
-            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
-        }
-
-        function copyFullOutput() {
-            // העתק את הטקסט המלא כפי שמופיע בתצוגה
-            const outputElement = document.getElementById('output-content');
-            const textContent = outputElement.innerText;
-            
-            navigator.clipboard.writeText(textContent).then(() => {
-                alert('הטקסט המלא הועתק ללוח! 📋');
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('delivery-date').value = today;
-        });
     </script>
 </body>
 </html>
+
+                <div class="form-group">
+                    <label for="customer-name" class="required">שם הלקוח</label>
+                    <input type="text" id="customer-name" placeholder="הזן שם הלקוח">
+                </div>
+
+                <div class="form-group">
+                    <label for="delivery-date" class="required">תאריך איסוף מתוכנן</label>
+                    <input type="date" id="delivery-date">
+                </div>
+
+                <div class="form-group">
+                    <label for="hour-request" class="required">שעת איסוף מבוקשת</label>
+                    <select id="hour-request">
+                        <option value="">בחר שעה</option>
+                        <option value="ללא">ללא</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="products-section">
+            <h2 class="products-title">פרטי המוצרים להזמנה</h2>
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th class="col-number">מספר</th>
+                        <th class="col-product">מק״ט</th>
+                        <th class="col-code">מצב מוצר</th>
+                        <th class="col-status">כמות</th>
+                        <th class="col-notes">הערות</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="row-number">1</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">2</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">3</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">4</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">5</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">6</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">7</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">8</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">9</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">10</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">11</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">12</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">13</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">14</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">15</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                    <tr>
+                        <td class="row-number">16</td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="product-autocomplete-input" placeholder="מק״ט המוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="autocomplete-container">
+                                <input type="text" class="autocomplete-input" placeholder="מצב מוצר" autocomplete="off">
+                                <div class="autocomplete-suggestions"></div>
+                            </div>
+                        </td>
+                        <td><input type="number" placeholder="כמות" min="1"></td>
+                        <td><input type="text" placeholder="הערות"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="viewData()">צפה בנתונים</button>
+                <button class="btn btn-info" onclick="downloadCSV()">ייצא קובץ</button>
+                <button class="btn btn-secondary" onclick="clearForm()">נקה טופס</button>
+                <button class="btn btn-success" onclick="shareWhatsApp()">שתף ווטסאפ</button>
+                <button class="btn btn-warning" id="add-row-btn" onclick="addNewRow()" style="display: none;">הוסף שורה נוספת</button>
+            </div>
